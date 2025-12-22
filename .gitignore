@@ -1,0 +1,57 @@
+##############################
+## Java
+##############################
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+##############################
+## Maven
+##############################
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+##############################
+## Gradle
+##############################
+.gradle/
+gradle/
+build/
+!gradle-wrapper.jar
+
+##############################
+## IntelliJ IDEA
+##############################
+idea/
+*.iml
+out/
+
+##############################
+## Eclipse
+##############################
+settings/
+bin/
+classpath
+project
+
+##############################
+## NetBeans
+##############################
+nbproject/private/
+build/
+dist/
+
+##############################
+## OS / Misc
+##############################
+DS_Store
+Thumbs.db

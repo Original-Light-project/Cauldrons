@@ -1,0 +1,10 @@
+recipes:
+  bread:
+    name: "Bread"
+    
+    ingredients:
+      WHEAT: 3
+
+    result:
+      material: BREAD
+      amount: 1
