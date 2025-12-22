@@ -24,6 +24,8 @@ public class GuiManager {
 
     private static final Map<Player, Recipe> selectedRecipes = new HashMap<>();
 
+    public static ItemStack result;
+
     public static void openCookGui(Player player) {
         Inventory inv = Bukkit.createInventory(null, 54, "Cauldrons");
 
@@ -105,10 +107,16 @@ public class GuiManager {
             }
 
             if (slot == RESULT_SLOT) {
-                if (event.getCursor() != null && !event.getCursor().getType().isAir()) {
+                if (result != null) {
+                    result = null;
+                    Bukkit.getScheduler().runTask(
+                            Cauldrons.instance,
+                            () -> updateCookIndicator(player, event.getInventory())
+                    );
+                    return;
+                } else {
                     event.setCancelled(true);
                 }
-                return;
             }
 
             if (!ALLOWED_SLOTS.contains(slot)) {
@@ -156,29 +164,32 @@ public class GuiManager {
     private static void updateCookIndicator(Player player, Inventory inv) {
         Recipe recipe = selectedRecipes.get(player);
 
+        // 1: No Recipe
         if (recipe == null) {
             inv.setItem(COOK_SLOT,
                     createPane(Material.RED_STAINED_GLASS_PANE, "§cSelect a recipe"));
             return;
         }
 
+        // 2: Check Result Slot
+        result = inv.getItem(RESULT_SLOT);
+        if (result != null && !result.getType().isAir()) {
+            inv.setItem(COOK_SLOT, createPane(Material.RED_STAINED_GLASS_PANE, "§cTake the result first"));
+            return;
+        }
+
+        // 3: Check Ingredients
         Map<Material, Integer> missing = getMissingIngredients(recipe, inv);
 
-        ItemStack output = inv.getItem(RESULT_SLOT);
-        boolean outputBlocked = output != null && !output.getType().isAir();
-
-        if (missing.isEmpty() && !outputBlocked) {
+        if (missing.isEmpty()) {
             inv.setItem(COOK_SLOT,
                     createPane(Material.GREEN_STAINED_GLASS_PANE, "§aClick to cook"));
         } else {
             ItemStack pane = new ItemStack(Material.RED_STAINED_GLASS_PANE);
             ItemMeta meta = pane.getItemMeta();
-            meta.setDisplayName("§cCannot cook");
+            meta.setDisplayName("§cMissing Ingredient(s)");
 
             List<String> lore = new ArrayList<>();
-            if (outputBlocked) {
-                lore.add("§7Output slot is not empty");
-            }
 
             missing.forEach((mat, amt) ->
                     lore.add("§7" + mat.name() + " x" + amt)
