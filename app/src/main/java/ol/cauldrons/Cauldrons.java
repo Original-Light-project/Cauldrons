@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ol.cauldrons.command.Commands;
@@ -44,5 +45,10 @@ public class Cauldrons extends JavaPlugin implements Listener {
         if (event.getClickedInventory() == null) return;
 
         GuiManager.handleCookGuiEvent(event);
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        GuiManager.closeCookGui(event);
     }
 }

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -58,6 +59,31 @@ public class GuiManager {
 
         updateCookIndicator(player, inv);
         player.openInventory(inv);
+    }
+
+    public static void closeCookGui(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        String title = event.getView().getTitle();
+
+        if (!title.equals("Cauldrons")) return;
+
+        Inventory inv = event.getInventory();
+
+        for (int slot : GuiManager.INGREDIENT_SLOTS) {
+            ItemStack item = inv.getItem(slot);
+            if (item != null && !item.getType().isAir()) {
+                HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(item);
+                leftover.values().forEach(i -> player.getWorld().dropItemNaturally(player.getLocation(), i));
+            }
+        }
+
+        ItemStack result = inv.getItem(GuiManager.RESULT_SLOT);
+        if (result != null && !result.getType().isAir()) {
+            HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(result);
+            leftover.values().forEach(i -> player.getWorld().dropItemNaturally(player.getLocation(), i));
+        }
+
+        inv.clear();
     }
 
     public static void handleCookGuiEvent(InventoryClickEvent event) {
