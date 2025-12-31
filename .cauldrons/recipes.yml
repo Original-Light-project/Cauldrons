@@ -1,10 +1,36 @@
 recipes:
-  bread:
-    name: "Bread"
+  bread: # 内部 ID
+    name: "麵包" # 顯示名稱
     
     ingredients:
-      WHEAT: 3
+      - type: VANILLA
+        id: WHEAT # 原版小麥
+        amount: 3
+
+      - type: MYTHIC
+        id: Suger # 一個自定義的糖Suger
+        amount: 1
 
     result:
-      material: BREAD
-      amount: 1
+      type: VANILLA
+      id: BREAD # 原版麵包
+
+  chicken_skewers:
+    name: "鷄肉串"
+
+    ingredients:
+      - type: VANILLA
+        id: CHICKEN
+        amount: 1
+
+      - type: MYTHIC
+        id: Salt
+        amount: 1
+
+      - type: MYTHIC
+        id: Pepper
+        amount: 1
+
+    result:
+      type: MYTHIC
+      id: ChickenSkewers
